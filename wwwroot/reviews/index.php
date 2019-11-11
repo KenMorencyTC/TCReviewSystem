@@ -4,26 +4,11 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     header("location: ./login.php");
     exit;
 }
-//var sAPIPath = "https://tc-demo-webapp.azurewebsites.net/reviews/"
-//var request = new XMLHttpRequest()
-//request.onreadystatechange = function() {
-//    if (this.readyState == 4 && this.status == 200) {
-//        var data = JSON.parse(this.response)
-//        for (var i = 0; i < data.length; i++) {
-//            console.log(data[i].name + ' is a ' + data[i].race + '.')
-//        }
-//    } else
-//}
-
-//request.send()
-
-?>
- 
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>TC Review System</title>
+    <title>Transport Canada Review System (DEMO)</title>
     <link rel="stylesheet" href="./css/bootstrap.css">
     <script type="text/javascript" src="./js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript">
@@ -38,7 +23,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
         case 3:
             return "Needs Improvement";
         default:
-            return "Error";
+            alert("Error formatting rating value.");
         } 
     }
     function sanitizeHTML(value) {
@@ -47,27 +32,37 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
         return value;
     }
     $(document).ready(function() {
-        var result, output, rating, review
-        var APIPath = "https://tc-demo-webapp.azurewebsites.net/reviews/rating/";
-        //Fetch and Assemble Reviews for Display Grid.
-        $.ajax({
-            url: APIPath,
-            dataType: 'json',
-            data: result,
-            success: function(result) {
+        var response, output, rating, review = ""
+        var APIPath = "https://tc-demo-webapp.azurewebsites.net/rating/";
+        //FETCH/ASSEMBLE REVIEWS FROM API
+        function reloadReviews() {
+            $.ajax({
+                url: APIPath,
+                dataType: 'json',
+                data: response
+            })
+            .done(function(response) {
                 output = ""
-                for (i in result) {
-                    if (result[i].rating){
-                        rating = ratingValue(result[i].rating)
-                        review = result[i].review
-                        output += '<a href="#img' + i + '"><div class="grid-item btn btn-success">' + rating + '</div></a>' + 
-                        '<a href="#_" class="lightbox" id="img' + i + '"><div class="wrapper"><h3>' + rating + '</h3>' +  review + '</div></a>'
+                if (response.message) {
+                    alert(response.message)
+                } else {
+                    for (i in response) {
+                        if (response[i].rating){
+                            rating = ratingValue(response[i].rating)
+                            review = sanitizeHTML(response[i].review).replace(/\n/g, "<br />")
+                            output += '<a href="#img' + i + '"><div class="grid-item btn btn-success">' + rating + '</div></a>' + 
+                            '<a href="#_" class="lightbox" id="img' + i + '"><div class="wrapper"><h3>' + rating + '</h3>' +  review + '</div></a>'
+                        }
                     }
                 }
                 $("#reviews").html(output)
-            },
-        })
-        //Override Form Submit and Execute Via AJAX.
+            })
+            .fail(function(jqXHR, textStatus) {
+                alert( "Request failed: " + textStatus );
+            });
+        }
+        reloadReviews()
+        //OVERRIDE SUBMIT W AJAX CALL
         $('form').submit(function(event) {
             var formData = {
                 'userid' : $('#form-userid').val(),
@@ -81,12 +76,22 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                 dataType    : 'json',
                 encode      : true
             })
-                .done(function(data) {
-                    console.log(data); 
-                });
-            event.preventDefault();
+            .done(function(response) {
+                if (response.message == "ReviewSaved") {
+                    alert("Thank you for your review!")
+                    reloadReviews()
+                } else if (response.message == "Unauthorized") {
+                    alert("Your session has expired, please login and try again.")
+                } else {
+                    alert("Error: " + response)
+                }
+            })
+            .fail(function(jqXHR, textStatus) {
+                alert( "Request failed: " + textStatus )
+            });
+            event.preventDefault()
         });
-    })
+    });
     
     </script>
 </head>
@@ -115,13 +120,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
         </div>
     </form>
     <div id="rating"><h3>User Reviews</h3></div>
-    <div class="reviews grid-container" id="reviews">
-        
-    </div>
-    
-    <p>
-        <a href="./logout.php" class="btn btn-danger"><?php echo htmlspecialchars($_SESSION["username"]); ?> - Log out</a>
-    </p>
+    <div class="reviews grid-container" id="reviews"></div>
+    <p><a href="./logout.php" class="btn btn-danger"><?php echo htmlspecialchars($_SESSION["username"]); ?> - Log out</a></p>
     </div>
 </body>
 </html>

@@ -1,10 +1,10 @@
 <?php
 session_start();
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
-    header("location: index.php");
+    header("location: ./index.php");
     exit;
 }
-require_once "./config/database.php";
+require_once "../config/database.php";
 $username = $password = "";
 $badusername = $badpassword = "";
 if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -32,8 +32,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             session_start();
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;                            
-                            header("location: index.php");
+                            $_SESSION["username"] = $username; 
+                            $_SESSION["password"] = $hashed_password; 
+                            header("location: ./index.php");
                         } else{
                             $badpassword = "The password you entered was invalid.";
                         }
