@@ -1,9 +1,11 @@
 <?php
+//CHECK IF LOGGED IN
 session_start();
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
     header("location: ./index.php");
     exit;
 }
+//PROCESS LOGIN
 require_once "../config/database.php";
 $username = $password = "";
 $badusername = $badpassword = "";
@@ -50,9 +52,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
     $mysqli->close();
 }
-?>
- 
-<!DOCTYPE html>
+?><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
