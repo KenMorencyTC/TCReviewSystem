@@ -1,0 +1,125 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "TC Reviews System",
+    "description" : "Create and View Reviews for Transport Canada.",
+    "contact" : {
+      "name" : "Ken Morency",
+      "url" : "https://github.com/KenMorencyTC/TCReviewSystem",
+      "email" : "ken.morency@icefire.ca"
+    },
+    "license" : {
+      "name" : "MIT License",
+      "url" : "https://github.com/KenMorencyTC/TCReviewSystem/blob/master/LICENSE"
+    },
+    "version" : "2.0"
+  },
+  "servers" : [ {
+    "url" : "https://tc-demo-webapp.azurewebsites.net",
+    "description" : "Demo Server"
+  } ],
+  "paths" : {
+    "/rating" : {
+      "get" : {
+        "description" : "Retrieve rating(s) from Database",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "example" : 34
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful fetch of review(s)",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Ratings"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "description" : "Create a new rating and review",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Review"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Successfully created rating and review"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Ratings" : {
+        "type" : "array",
+        "description" : "Model containing array of ratings",
+        "items" : {
+          "$ref" : "#/components/schemas/Rating"
+        }
+      },
+      "Rating" : {
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "example" : 4
+          },
+          "rating" : {
+            "maximum" : 2,
+            "minimum" : 0,
+            "type" : "integer",
+            "example" : 1
+          },
+          "review" : {
+            "maximum" : 250,
+            "type" : "string",
+            "example" : "A User Review"
+          },
+          "userid" : {
+            "maximum" : 255,
+            "type" : "string",
+            "example" : "johndoe"
+          }
+        },
+        "description" : "Model containing rating info"
+      },
+      "Review" : {
+        "properties" : {
+          "review" : {
+            "type" : "string",
+            "example" : "Great experience!"
+          },
+          "rating" : {
+            "maximum" : 2,
+            "minimum" : 0,
+            "type" : "integer",
+            "example" : 1
+          },
+          "userid" : {
+            "maximum" : 255,
+            "type" : "string",
+            "example" : "johndoe"
+          }
+        },
+        "description" : "Model containing rating and review info"
+      }
+    }
+  }
+}
