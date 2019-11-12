@@ -1,20 +1,25 @@
 # TCReviewSystem API
-Simple Client Review API Solution
+API JSON: https://tc-demo-webapp.azurewebsites.net/rating/openapi.json
 
-API JSON: https://github.com/KenMorencyTC/TCReviewSystem/blob/master/wwwroot/rating/openapi.json
+API DOC: https://tc-demo-webapp.azurewebsites.net/rating/apidoc.html
 
 SWAGGER API: https://app.swaggerhub.com/apis/KenMorencyTC/tc-ratings_reviews_system/2.0
 
-GitHub Repository: https://github.com/KenMorencyTC/TCReviewSystem
+Component Description:
 
-Component Description: 
+TC Review System API provides users the ability to login, submit a review and view existing
+reviews. It was developed in JS/PHP on Azure Web App processing GET/POST requests and
+delivers responses in JSON format. All reviews stored in MySQL database. Users not
+authenticated on the server are prompted for username and password checked against the
+database.
 
-TC Review System API provides users the ability to login, submit a review and view existing reviews. It was developed in JS/PHP on Azure Web App processing GET/POST requests and delivers responses in JSON format. All reviews stored in MySQL database. Users not authenticated on the server are prompted for username and password checked against the database. 
-
-User Interface developed in PHP and includes login functionality supported my MySQL database. The user interface, at /reviews/index.php, uses AJAX requests and dynamically updates content based on user input. I have opted for basic Authentication and not to implement OAuth for simplicity sake and it was not a requirement for this prototype.
+User Interface developed in PHP and includes login functionality supported my MySQL
+database. The user interface, at /reviews/index.php, uses AJAX requests and dynamically
+updates content based on user input. I have opted for basic Authentication and not to
+implement OAuth for simplicity sake and it was not a requirement for this prototype. XSS
+vulnerabilities were also considered and mitigated.
 
 Database is simple MySQL database with two tables: ratings & users.
-
 ```
 RATINGS:
 CREATE TABLE `ratings` (
@@ -35,11 +40,13 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 ```
 
-Rationale: 
+Rationale:
 
-PHP is a very common language and supported by most platforms. PHP provides a low overhead solution to provisioning proof of concept prototypes. 
+PHP is a very common language and supported by most platforms. PHP provides a low
+overhead solution to provisioning proof of concept prototypes.
 
-MySQL is a widely used open source database and supports most typical operations required for prototyping.
+MySQL is a widely used open source database and supports most typical operations required
+for prototyping.
 
 JQuery is leveraged to facilitate AJAX requests. A very common JS library used everywhere.
 
