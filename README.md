@@ -1,7 +1,7 @@
 # TCReviewSystem API
 Simple Client Review API Solution
 
-API JSON: https://github.com/KenMorencyTC/TCReviewSystem/blob/master/openapi.json
+API JSON: https://github.com/KenMorencyTC/TCReviewSystem/blob/master/wwwroot/rating/openapi.json
 
 SWAGGER API: https://app.swaggerhub.com/apis/KenMorencyTC/tc-ratings_reviews_system/2.0
 
